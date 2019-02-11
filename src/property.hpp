@@ -8,11 +8,11 @@
  * @param type - primitive type
  * @param name - name field
  */
-#define SETTER_PRIM(type, name)							\
-	void set_##name(type value)	{						\
+#define SETTER_PRIM(type, name)					\
+	void set_##name(type value)	{			\
 		static_assert(std::is_fundamental<type>::value, \
-					  "only primitive types");			\
-		this->name = value;								\
+					  "only primitive types");\
+		this->name = value;				\
 	}
 
 /**
@@ -20,11 +20,11 @@
  * @param type - boolean type
  * @param name - name field
  */
-#define SETTER_FLAG(type, name)							\
-	void set_##name(type value)	{						\
+#define SETTER_FLAG(type, name)					\
+	void set_##name(type value)	{			\
 		static_assert(std::is_same<type, bool>::value,  \
-					  "only bool type");			    \
-		this->name = value;								\
+					  "only bool type");	\
+		this->name = value;				\
 	}
 
 /**
@@ -33,12 +33,12 @@
  * @param type - object type
  * @param name - name field
  */
-#define SETTER_OBJ_LR(type, name)					\
-	void set_##name(type& value)	{				\
+#define SETTER_OBJ_LR(type, name)				\
+	void set_##name(type& value)	{			\
 		static_assert(std::is_class<type>::value ||	\
-				      std::is_union<type>::value, 	\
-				      "only class types");			\
-		this->name = value;							\
+				      std::is_union<type>::value,\
+				      "only class types");	\
+		this->name = value;				\
 	}
 
 /**
@@ -49,10 +49,10 @@
  */
 #define SETTER_OBJ_CLR(type, name)					\
 	void set_##name(const type& value)	{			\
-		static_assert(std::is_class<type>::value ||	\
+		static_assert(std::is_class<type>::value ||	        \
 					  std::is_union<type>::value, 	\
-					  "only class types");			\
-		this->name = value;							\
+					  "only class types");		\
+		this->name = value;					\
 	}
 
 /**
@@ -63,9 +63,9 @@
  */
 #define SETTER_OBJ_RR(type, name)					\
 	void set_##name(type&& value)	{				\
-		static_assert(std::is_class<type>::value ||	\
+		static_assert(std::is_class<type>::value ||	        \
 					  std::is_union<type>::value, 	\
-					  "only class types");			\
+					  "only class types");		\
 		this->name = std::move(value);				\
 	}
 
@@ -77,9 +77,9 @@
  */
 #define SETTER_OBJ_CRR(type, name)					\
 	void set_##name(const type&& value)	{			\
-		static_assert(std::is_class<type>::value ||	\
+		static_assert(std::is_class<type>::value ||	        \
 					  std::is_union<type>::value, 	\
-					  "only class types");			\
+					  "only class types");		\
 		this->name = std::move(value);				\
 	}
 
@@ -88,13 +88,13 @@
  * @param type - pointer type
  * @param name - name field
  */
-#define SETTER_PTR(type, name)								 \
-	void set_##name(type* value)	{						 \
+#define SETTER_PTR(type, name)						 \
+	void set_##name(type* value)	{				 \
 		static_assert(std::is_pointer<type*>::value,		 \
-					  "only pointer types");				 \
-		static_assert(std::is_pointer<decltype(name)>::value,\
-					  "variable must be pointer");			 \
-		this->name = value;									 \
+					  "only pointer types");	 \
+		static_assert(std::is_pointer<decltype(name)>::value,    \
+					  "variable must be pointer");	 \
+		this->name = value;					 \
 	}
 
 /**
@@ -103,19 +103,19 @@
  * @param name - name field
  * @param length - length array
  */
-#define SETTER_ARR(type, array, length)							\
-	void set_##name(type (&new_array)[length]) {				\
-		static_assert(std::is_same<std::remove_all_extents_t< 	\
-                                  decltype(array)>,       		\
+#define SETTER_ARR(type, array, length)								\
+	void set_##name(type (&new_array)[length]) {						\
+		static_assert(std::is_same<std::remove_all_extents_t< 				\
+                                  decltype(array)>,       		                        \
 								  type>::value,	              	\
 							  "types arrays must be same");	  	\
-		static_assert(std::is_array<type[]>::value, 			\
-					  "only array types");						\
-		static_assert(std::is_array<decltype(array)>::value,	\
+		static_assert(std::is_array<type[]>::value, 					\
+					  "only array types");					\
+		static_assert(std::is_array<decltype(array)>::value,				\
 					  "variable must be array");			 	\
 		for (int i = 0; i < length; i++) {						\
-			this->array[i] = new_array[i];		              	\
-		}											            \
+			this->array[i] = new_array[i];		              			\
+		}										\
 	}
 
 /**
@@ -123,11 +123,11 @@
  * @param type - primitive type
  * @param name - name field
  */
-#define GETTER_PRIM(type, name) 						\
-	type get_##name() const { 							\
-		static_assert(std::is_fundamental<type>::value, \
-					  "only primitive types");			\
-		return name; 									\
+#define GETTER_PRIM(type, name) 					\
+	type get_##name() const { 					\
+		static_assert(std::is_fundamental<type>::value, 	\
+					  "only primitive types");	\
+		return name; 						\
 	}
 
 /**
@@ -135,11 +135,11 @@
  * @param type - boolean type
  * @param name - name field
  */
-#define GETTER_FLAG(type, name) 						\
-	type is_##name() const { 							\
+#define GETTER_FLAG(type, name) 				\
+	type is_##name() const { 				\
 		static_assert(std::is_same<type, bool>::value,  \
-					  "only bool type");			    \
-		return name; 									\
+					  "only bool type");	\
+		return name; 					\
 	}
 
 /**
@@ -149,11 +149,11 @@
  * @param name - name field
  */
 #define GETTER_OBJ_LR(type, name) 					\
-	type& get_##name()  { 							\
-		static_assert(std::is_class<type>::value ||	\
+	type& get_##name()  { 						\
+		static_assert(std::is_class<type>::value ||		\
 					  std::is_union<type>::value, 	\
-					  "only class types");			\
-	    return name; 								\
+					  "only class types");		\
+	    return name; 						\
 	}
 
 /**
@@ -164,10 +164,10 @@
  */
 #define GETTER_OBJ_CLR(type, name) 					\
 	const type& get_##name() const { 				\
-		static_assert(std::is_class<type>::value ||	\
+		static_assert(std::is_class<type>::value ||		\
 					  std::is_union<type>::value, 	\
-					  "only class types");			\
-	    return name; 								\
+					  "only class types");		\
+	    return name; 						\
 	}
 
 /**
@@ -176,13 +176,13 @@
  * @param type - pointer type
  * @param name - name field
  */
-#define GETTER_PTR(type, name)								 \
-	type* get_##name()	{						 			 \
+#define GETTER_PTR(type, name)						 \
+	type* get_##name()	{					 \
 		static_assert(std::is_pointer<type*>::value,		 \
-					  "only pointer types");				 \
-		static_assert(std::is_pointer<decltype(name)>::value,\
-					  "variable must be pointer");			 \
-		return name; 							 			 \
+					  "only pointer types");	 \
+		static_assert(std::is_pointer<decltype(name)>::value,    \
+					  "variable must be pointer");	 \
+		return name; 						 \
 	}
 
 /**
@@ -191,13 +191,13 @@
  * @param type - array type
  * @param name - name field
  */
-#define GETTER_ARR(type, name) 								\
-	type* get_##name() { 									\
-		static_assert(std::is_array<type[]>::value,			\
-					  "only array types");					\
-		static_assert(std::is_array<decltype(name)>::value, \
-					  "variable must be array");			\
-	    return name; 										\
+#define GETTER_ARR(type, name) 						\
+	type* get_##name() { 						\
+		static_assert(std::is_array<type[]>::value,		\
+					  "only array types");		\
+		static_assert(std::is_array<decltype(name)>::value, 	\
+					  "variable must be array");	\
+	    return name; 						\
 	}
 
 
