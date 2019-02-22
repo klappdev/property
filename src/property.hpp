@@ -115,6 +115,48 @@
 	}
 
 /**
+ * Macro create setter for lvalue reference type
+ * @param type - lvalue reference type
+ * @param name - name field
+ */
+#define SETTER_REF_LV(type, name)							 			\
+	void set_##name(type& value)	{						 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		this->name = value;									 			\
+	}
+
+/**
+ * Macro create setter for const lvalue reference type
+ * @param type - const lvalue reference type
+ * @param name - name field
+ */
+#define SETTER_REF_CLV(type, name)							 			\
+	void set_##name(const type& value)	{						 		\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		this->name = value;									 			\
+	}
+
+/**
+ * Macro create setter for rvalue reference type
+ * @param type - rvalue reference type
+ * @param name - name field
+ */
+#define SETTER_REF_RV(type, name)							 			\
+	void set_##name(type&& value)	{						 			\
+		static_assert(std::is_rvalue_reference<type&&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_rvalue_reference<decltype(name)>::value,	\
+					  "variable must be rvalue reference");	 			\
+		this->name = std::move(value);	 					 			\
+	}
+
+/**
  * Macro create setter for pointer type
  * @param type - pointer type
  * @param name - name field
@@ -278,8 +320,87 @@
 	}
 
 /**
+ * Macro create getter for lvalue reference type
+ * with return lvalue reference
+ * @param type - lvalue reference type
+ * @param name - name field
+ */
+#define GETTER_REF_LV(type, name)							 			\
+	type& get_##name()	{						 			 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+/**
+ * Macro create getter for const lvalue reference type
+ * with return const lvalue reference
+ * @param type - reference type
+ * @param name - name field
+ */
+#define GETTER_REF_CLV(type, name)							 			\
+	const type& get_##name()	{							 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+/**
+ * Macro create getter for lvalue reference type
+ * with return lvalue reference and qualifier for
+ * lvalue object
+ * @param type - lvalue reference type
+ * @param name - name field
+ */
+#define GETTER_REF_LV_LRQ(type, name)						 			\
+	type& get_##name() & {						 			 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+/**
+ * Macro create getter for const lvalue reference type
+ * with return const lvalue reference and qualifier for
+ * const lvalue object
+ * @param type - reference type
+ * @param name - name field
+ */
+#define GETTER_REF_CLV_CLRQ(type, name)						 			\
+	const type& get_##name() const & {						 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+
+/**
+ * Macro create getter for rvalue reference type
+ * with return rvalue reference and qualifier for
+ * rvalue object
+ * @param type - reference type
+ * @param name - name field
+ */
+#define GETTER_REF_RV_RRQ(type, name)						 			\
+	type&& get_##name() &&	{							 				\
+		static_assert(std::is_rvalue_reference<type&&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_rvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return std::move(name); 							 			\
+	}
+
+/**
  * Macro create getter for pointer type
- * with pointer return value
+ * with return pointer
  * @param type - pointer type
  * @param name - name field
  */

@@ -58,6 +58,26 @@ private:
 	int number;
 };
 
+static string init = "init-value";
+
+class reference {
+public:
+	reference() : lvref(init), rvref("Europe") {}
+	reference(std::string&& rvref) : lvref(init), rvref(std::move(rvref)) {}
+	~reference() {}
+
+	SETTER_REF_LV(std::string, lvref);
+	SETTER_REF_RV(std::string, rvref);
+
+	GETTER_REF_LV(std::string, lvref);
+	GETTER_REF_RV_RRQ(std::string, rvref);
+
+private:
+	std::string& lvref;
+	std::string&& rvref;
+};
+
+
 static void test_person() {
 	person p;
 
@@ -119,11 +139,29 @@ static void test_address() {
 	cout << "field street: " << city << endl;
 }
 
+static void test_reference() {
+	reference ref;
+
+	/* 1 */
+	string name = "Jonny";
+	ref.set_lvref(name);
+	cout << "field lvref: " << ref.get_lvref() << endl;
+
+	/* 2 */
+	string nick_name = "JJ";
+	ref.set_lvref(nick_name);
+	cout << "field clvref: " << ref.get_lvref() << endl;
+
+	/* 3 */
+	cout << "field rvref: " << reference("Asia").get_rvref() << endl;
+}
+
 int main(int argc, char **argv) {
 	cout << "Test property library" << endl;
 
 	test_person();
 	test_address();
+	test_reference();
 }
 
 
