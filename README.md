@@ -4,9 +4,10 @@ getters and setters for members class.
 
 Library can generate getter and setter for such members:<br/>
     > primitive members<br/>
-    > object lvalue and rvalue members<br/>
+    > object  members<br/>
     > pointer members<br/>
     > array members<br/>
+    > reference members<br/>
 
 When generate getter, setter for members classes occur in compile<br/>
 time check types, name members, kind members using type traits   <br/>
@@ -34,12 +35,22 @@ public:
    SETTER_OBJ_CLR(std::string, name);
    SETTER_OBJ_RR(std::string,  name);
    SETTER_OBJ_CRR(std::string, name);
+   
+   SETTER_REF_LR(std::string, address);
+   SETTER_REF_RR(std::string, address);
 
    GETTER_PRIM(int, id);
    GETTER_FLAG(bool, merried);
 
    GETTER_OBJ_LR(std::string,  name);
    GETTER_OBJ_CLR(std::string, name);
+   
+   GETTER_OBJ_LR_LRQ(std::string, name);
+   GETTER_OBJ_CLR_CLRQ(std::string, name);
+   GETTER_OBJ_RR_RRQ(std::string, name);
+   
+   GETTER_REF_LR(std::string,  address);
+   GETTER_REF_CLR(std::string, address);
 
    GETTER_PTR(int, next);
    GETTER_ARR(std::string, address);
@@ -47,6 +58,7 @@ public:
 private:
     int id;
     std::string name;
+    std::string address;
     std::string address[5];
     
     bool merried;
@@ -54,8 +66,9 @@ private:
 };
 ```
 
-In future expects add getters and setters for reference type members<br/>
-and reference-qualified member methods.
+In future expects add getters and setters for reference <br/>
+and pointer to array and function. <br/>
+Also add version setters and getters with volatile qualifier.
 
 Requirements:<br/>
 Standard: C++14 <br/>

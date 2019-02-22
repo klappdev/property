@@ -65,6 +65,23 @@
 
 /**
  * Macro create setter for object type
+ * with volatile lvalue parameter
+ * @param type - object type
+ * @param name - name field
+ */
+#define SETTER_OBJ_VLR(type, name)								\
+	void set_##name(volatile type& value)	{					\
+		static_assert(std::is_class<type>::value ||				\
+				      std::is_union<type>::value, 				\
+				      "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+		this->name = value;										\
+	}
+
+/**
+ * Macro create setter for object type
  * with const lvalue parameter
  * @param type - object type
  * @param name - name field
@@ -79,6 +96,25 @@
 					  "variable must be class");				\
 		this->name = value;										\
 	}
+
+/**
+ * Macro create setter for object type
+ * with const volatile lvalue parameter
+ * @param type - object type
+ * @param name - name field
+ */
+#define SETTER_OBJ_CVLR(type, name)								\
+	void set_##name(const volatile type& value)	{				\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+		this->name = value;										\
+	}
+
+
 
 /**
  * Macro create setter for object type
@@ -99,12 +135,46 @@
 
 /**
  * Macro create setter for object type
+ * with volatile rvalue parameter
+ * @param type - object type
+ * @param name - name field
+ */
+#define SETTER_OBJ_VRR(type, name)								\
+	void set_##name(volatile type&& value)	{					\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+		this->name = std::move(value);							\
+	}
+
+/**
+ * Macro create setter for object type
  * with const rvalue parameter
  * @param type - object type
  * @param name - name field
  */
 #define SETTER_OBJ_CRR(type, name)								\
 	void set_##name(const type&& value)	{						\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+		this->name = std::move(value);							\
+	}
+
+/**
+ * Macro create setter for object type
+ * with const volatile rvalue parameter
+ * @param type - object type
+ * @param name - name field
+ */
+#define SETTER_OBJ_CVRR(type, name)								\
+	void set_##name(const volatile type&& value)	{			\
 		static_assert(std::is_class<type>::value ||				\
 					  std::is_union<type>::value, 				\
 					  "only class types");						\
@@ -253,12 +323,46 @@
 
 /**
  * Macro create getter for object type
+ * with volatile lvalue return value
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_VLR(type, name) 								\
+	volatile type& get_##name()  { 								\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return name; 											\
+	}
+
+/**
+ * Macro create getter for object type
  * with const lvalue return value
  * @param type - object type
  * @param name - name field
  */
 #define GETTER_OBJ_CLR(type, name) 								\
 	const type& get_##name() const { 							\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return name; 											\
+	}
+
+/**
+ * Macro create getter for object type
+ * with const volatile lvalue return value
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_CVLR(type, name) 							\
+	const volatile type& get_##name() const { 					\
 		static_assert(std::is_class<type>::value ||				\
 					  std::is_union<type>::value, 				\
 					  "only class types");						\
@@ -287,12 +391,46 @@
 
 /**
  * Macro create getter for object type with lvalue
- * return value and qualifier for const lvalue object
+ * return value and volatile qualifier for lvalue object
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_VLR_VLRQ(type, name)    						\
+	volatile type& get_##name() volatile & { 					\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return name; 											\
+	}
+
+/**
+ * Macro create getter for object type with lvalue
+ * return value and const qualifier for lvalue object
  * @param type - object type
  * @param name - name field
  */
 #define GETTER_OBJ_CLR_CLRQ(type, name) 						\
 	const type& get_##name() const & { 							\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return name; 											\
+	}
+
+/**
+ * Macro create getter for object type with lvalue
+ * return value and const volatile qualifier for lvalue object
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_CVLR_CVLRQ(type, name) 						\
+	const volatile type& get_##name() const volatile & {		\
 		static_assert(std::is_class<type>::value ||				\
 					  std::is_union<type>::value, 				\
 					  "only class types");						\
@@ -335,6 +473,21 @@
 	}
 
 /**
+ * Macro create getter for lvalue reference type
+ * with return volatile lvalue reference
+ * @param type - lvalue reference type
+ * @param name - name field
+ */
+#define GETTER_REF_VLV(type, name)							 			\
+	volatile type& get_##name()	{				 			 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+/**
  * Macro create getter for const lvalue reference type
  * with return const lvalue reference
  * @param type - reference type
@@ -342,6 +495,21 @@
  */
 #define GETTER_REF_CLV(type, name)							 			\
 	const type& get_##name()	{							 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+/**
+ * Macro create getter for const lvalue reference type
+ * with return const volatile lvalue reference
+ * @param type - reference type
+ * @param name - name field
+ */
+#define GETTER_REF_CVLV(type, name)							 			\
+	const volatile type& get_##name()	{					 			\
 		static_assert(std::is_lvalue_reference<type&>::value,		 	\
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
@@ -366,6 +534,22 @@
 	}
 
 /**
+ * Macro create getter for lvalue reference type
+ * with return value lvalue reference and qualifier
+ * for volatile lvalue object
+ * @param type - lvalue reference type
+ * @param name - name field
+ */
+#define GETTER_REF_VLV_VLRQ(type, name)						 			\
+	volatile type& get_##name() volatile & {	 			 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+/**
  * Macro create getter for const lvalue reference type
  * with return const lvalue reference and qualifier for
  * const lvalue object
@@ -374,6 +558,22 @@
  */
 #define GETTER_REF_CLV_CLRQ(type, name)						 			\
 	const type& get_##name() const & {						 			\
+		static_assert(std::is_lvalue_reference<type&>::value,		 	\
+					  "only reference types");				 			\
+		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
+					  "variable must be lvalue reference");	 			\
+		return name; 							 			 			\
+	}
+
+/**
+ * Macro create getter for const volatile lvalue reference type
+ * with return const volatile lvalue reference and qualifier for
+ * const lvalue object
+ * @param type - reference type
+ * @param name - name field
+ */
+#define GETTER_REF_CVLV_CVLRQ(type, name)						 		\
+	const volatile type& get_##name() const volatile & {	 			\
 		static_assert(std::is_lvalue_reference<type&>::value,		 	\
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\

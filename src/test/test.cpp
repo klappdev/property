@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "property.hpp"
+#include "../property.hpp"
+#include "../type/check_type.hpp"
 
 using namespace std;
 
@@ -58,8 +59,6 @@ private:
 	int number;
 };
 
-static string init = "init-value";
-
 class reference {
 public:
 	reference() : lvref(init), rvref("Europe") {}
@@ -73,8 +72,9 @@ public:
 	GETTER_REF_RV_RRQ(std::string, rvref);
 
 private:
-	std::string& lvref;
-	std::string&& rvref;
+	string init = "init-value";
+	string& lvref;
+	string&& rvref;
 };
 
 
@@ -139,6 +139,7 @@ static void test_address() {
 	cout << "field street: " << city << endl;
 }
 
+
 static void test_reference() {
 	reference ref;
 
@@ -155,6 +156,8 @@ static void test_reference() {
 	/* 3 */
 	cout << "field rvref: " << reference("Asia").get_rvref() << endl;
 }
+
+
 
 int main(int argc, char **argv) {
 	cout << "Test property library" << endl;
