@@ -227,6 +227,57 @@
 	}
 
 /**
+ * Macro create getter for object type with lvalue
+ * return value and qualifier for lvalue object
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_LR_LRQ(type, name)    						\
+	type& get_##name() & { 										\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return name; 											\
+	}
+
+/**
+ * Macro create getter for object type with lvalue
+ * return value and qualifier for const lvalue object
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_CLR_CLRQ(type, name) 						\
+	const type& get_##name() const & { 							\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return name; 											\
+	}
+
+/**
+ * Macro create getter for object type with rvalue
+ * return value and qualifier for rvalue object
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_RR_RRQ(type, name) 							\
+	type&& get_##name() && { 									\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return std::move(name);									\
+	}
+
+/**
  * Macro create getter for pointer type
  * with pointer return value
  * @param type - pointer type

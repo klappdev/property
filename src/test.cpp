@@ -19,7 +19,6 @@ public:
    SETTER_OBJ_LR(std::string,  name);
    SETTER_OBJ_CLR(std::string, name);
    SETTER_OBJ_RR(std::string,  name);
-   SETTER_OBJ_CRR(std::string, name);
 
    GETTER_PRIM(int, id);
    GETTER_FLAG(bool, merried);
@@ -39,10 +38,27 @@ private:
 	int* next;
 };
 
+class address {
+public:
+	address() = default;
+   ~address() = default;
 
-int main(int argc, char **argv) {
-	cout << "Test property util" << endl;
+    address(std::string&& city) : city(std::move(city)) {}
 
+	SETTER_OBJ_VAL(std::string, city);
+	SETTER_OBJ_CLR(std::string, street);
+
+	GETTER_OBJ_LR_LRQ(std::string, city);
+	GETTER_OBJ_RR_RRQ(std::string, city);
+	GETTER_OBJ_CLR_CLRQ(std::string, street);
+
+private:
+	std::string city;
+	std::string street;
+	int number;
+};
+
+static void test_person() {
 	person p;
 
 	/* 1 */
@@ -79,8 +95,35 @@ int main(int argc, char **argv) {
 	p.set_name("Jenny");
 	cout << "field name: " << p.get_name() << endl;
 
+	cout << endl;
+}
 
+static void test_address() {
+	address addr;
 
+	/* 1 */
+	addr.set_city("Warsaw");
+	cout << "field city: " << addr.get_city() << endl;
+
+	std::string another_city = "Paris";
+	addr.get_city() = another_city;
+	cout << "change field city: " << addr.get_city() << endl;
+
+	/* 2 */
+	std::string street = "Sent-Trudent";
+	addr.set_street(street);
+	cout << "field street: " << addr.get_street() << endl;
+
+	/* 3 */
+	std::string&& city = address("Berlin").get_city();
+	cout << "field street: " << city << endl;
+}
+
+int main(int argc, char **argv) {
+	cout << "Test property library" << endl;
+
+	test_person();
+	test_address();
 }
 
 
