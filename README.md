@@ -20,6 +20,7 @@ Developer can write less code and to be sure that code write correct.
 using namespace std;
 
 class person {
+public:
    person() = default;
    ~person() = default;
 
