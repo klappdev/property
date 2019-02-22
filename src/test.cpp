@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 	p.set_name(name);
 	cout << "field name: " << p.get_name() << endl;
 
-	/* 5 */
+	/* 6 */
 	p.set_name("Jenny");
 	cout << "field name: " << p.get_name() << endl;
 

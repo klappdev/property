@@ -8,10 +8,10 @@
  * @param type - primitive type
  * @param name - name field
  */
-#define SETTER_PRIM(type, name)							\
-	void set_##name(type value)	{						\
-		static_assert(std::is_fundamental<type>::value, \
-					  "only primitive types");			\
+#define SETTER_PRIM(type, name)										\
+	void set_##name(type value)	{									\
+		static_assert(std::is_fundamental<type>::value, 			\
+					  "only primitive types");						\
 		static_assert(std::is_fundamental<decltype(name)>::value,	\
 					  "variable must be primitive");				\
 		this->name = value;											\
@@ -31,15 +31,32 @@
 
 /**
  * Macro create setter for object type
+ * by value
+ * @param type - object type
+ * @param name - name field
+ */
+#define SETTER_OBJ_VAL(type, name)								\
+	void set_##name(type value)	{								\
+		static_assert(std::is_class<type>::value ||				\
+				      std::is_union<type>::value, 				\
+				      "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+		this->name = value;										\
+	}
+
+/**
+ * Macro create setter for object type
  * with lvalue parameter
  * @param type - object type
  * @param name - name field
  */
-#define SETTER_OBJ_LR(type, name)					\
-	void set_##name(type& value)	{				\
-		static_assert(std::is_class<type>::value ||	\
-				      std::is_union<type>::value, 	\
-				      "only class types");			\
+#define SETTER_OBJ_LR(type, name)								\
+	void set_##name(type& value)	{							\
+		static_assert(std::is_class<type>::value ||				\
+				      std::is_union<type>::value, 				\
+				      "only class types");						\
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
@@ -52,11 +69,11 @@
  * @param type - object type
  * @param name - name field
  */
-#define SETTER_OBJ_CLR(type, name)					\
-	void set_##name(const type& value)	{			\
-		static_assert(std::is_class<type>::value ||	\
-					  std::is_union<type>::value, 	\
-					  "only class types");			\
+#define SETTER_OBJ_CLR(type, name)								\
+	void set_##name(const type& value)	{						\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
@@ -69,11 +86,11 @@
  * @param type - object type
  * @param name - name field
  */
-#define SETTER_OBJ_RR(type, name)					\
-	void set_##name(type&& value)	{				\
-		static_assert(std::is_class<type>::value ||	\
-					  std::is_union<type>::value, 	\
-					  "only class types");			\
+#define SETTER_OBJ_RR(type, name)								\
+	void set_##name(type&& value)	{							\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
@@ -86,11 +103,11 @@
  * @param type - object type
  * @param name - name field
  */
-#define SETTER_OBJ_CRR(type, name)					\
-	void set_##name(const type&& value)	{			\
-		static_assert(std::is_class<type>::value ||	\
-					  std::is_union<type>::value, 	\
-					  "only class types");			\
+#define SETTER_OBJ_CRR(type, name)								\
+	void set_##name(const type&& value)	{						\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
@@ -137,10 +154,10 @@
  * @param type - primitive type
  * @param name - name field
  */
-#define GETTER_PRIM(type, name) 						\
-	type get_##name() const { 							\
-		static_assert(std::is_fundamental<type>::value, \
-					  "only primitive types");			\
+#define GETTER_PRIM(type, name) 									\
+	type get_##name() const { 										\
+		static_assert(std::is_fundamental<type>::value, 			\
+					  "only primitive types");						\
 		static_assert(std::is_fundamental<decltype(name)>::value,	\
 					  "variable must be primitive");				\
 		return name; 												\
@@ -160,15 +177,32 @@
 
 /**
  * Macro create getter for object type
+ * which return value
+ * @param type - object type
+ * @param name - name field
+ */
+#define GETTER_OBJ_VAL(type, name) 								\
+	type get_##name()  { 										\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
+		static_assert(std::is_class<decltype(name)>::value ||	\
+					  std::is_union<decltype(name)>::value,		\
+					  "variable must be class");				\
+	    return name; 											\
+	}
+
+/**
+ * Macro create getter for object type
  * with lvalue return value
  * @param type - object type
  * @param name - name field
  */
-#define GETTER_OBJ_LR(type, name) 					\
-	type& get_##name()  { 							\
-		static_assert(std::is_class<type>::value ||	\
-					  std::is_union<type>::value, 	\
-					  "only class types");			\
+#define GETTER_OBJ_LR(type, name) 								\
+	type& get_##name()  { 										\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
@@ -181,11 +215,11 @@
  * @param type - object type
  * @param name - name field
  */
-#define GETTER_OBJ_CLR(type, name) 					\
-	const type& get_##name() const { 				\
-		static_assert(std::is_class<type>::value ||	\
-					  std::is_union<type>::value, 	\
-					  "only class types");			\
+#define GETTER_OBJ_CLR(type, name) 								\
+	const type& get_##name() const { 							\
+		static_assert(std::is_class<type>::value ||				\
+					  std::is_union<type>::value, 				\
+					  "only class types");						\
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
