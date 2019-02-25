@@ -3,11 +3,17 @@ This is simple C++ header only library for generate<br/>
 getters and setters for members class.
 
 Library can generate getter and setter for such members:<br/>
-    > primitive members<br/>
-    > object  members<br/>
-    > pointer members<br/>
-    > array members<br/>
-    > reference members<br/>
+
+    > primitive members
+    > object members   
+    > enum members
+    > array members
+    > pointer members
+    > reference members
+    > pointer to array members
+    > reference to array members
+    > pointer to function members
+    > reference to function members
 
 When generate getter, setter for members classes occur in compile<br/>
 time check types, name members, kind members using type traits   <br/>
@@ -66,9 +72,8 @@ private:
 };
 ```
 
-In future expects add getters and setters for reference <br/>
-and pointer to array and function. <br/>
-Also add version setters and getters with volatile qualifier.
+In future expects improve getters and setters for reference <br/>
+and pointer to function with varidic arguments. <br/>
 
 Requirements:<br/>
 Standard: C++14 <br/>

@@ -154,7 +154,6 @@ static void test_address() {
 	cout << "field street: " << city << endl;
 }
 
-
 static void test_reference() {
 	reference ref;
 
@@ -172,24 +171,22 @@ static void test_reference() {
 	cout << "field rvref: " << reference("Asia").get_rvref() << endl;
 }
 
-static void test_smart() {
+static void test_smart_array() {
 	smart_array sa;
 
 	/* 1 */
 	int first[3] = { 1, 2, 3 };
 	sa.set_arr_ptr(&first);
 
-
 	for (int item : *sa.get_arr_ptr()) {
-		cout << "item: " << item << endl;
+		cout << "item arr_ptr: " << item << endl;
 	}
 
 	/* 2 */
 	for (int item : sa.get_arr_lvref()) {
-		cout << "item: " << item << endl;
+		cout << "item arr_lvref: " << item << endl;
 	}
 }
-
 
 int main(int argc, char **argv) {
 	cout << "Test property library" << endl;
@@ -197,7 +194,7 @@ int main(int argc, char **argv) {
 	test_person();
 	test_address();
 	test_reference();
-	test_smart();
+	test_smart_array();
 }
 
 

@@ -279,6 +279,20 @@
 	}
 
 /**
+ * Macro create setter for pointer to function type
+ * @param type - pointer to function type
+ * @param name - name field
+ */
+#define SETTER_PTR_TO_FUNC(type, func)									\
+	void set_##func(type (*new_func)()) {								\
+		static_assert(is_function_pointer<type(*)()>::value,			\
+                      "only pointer to function types");				\
+		static_assert(is_function_pointer<decltype(func)>::value,		\
+					  "variable must be pointer to function");			\
+		this->func = new_func;					            			\
+	}
+
+/**
  * Macro create getter for primitive type
  * @param type - primitive type
  * @param name - name field
@@ -673,6 +687,36 @@
 		static_assert(is_array_lvalue_reference<decltype(array)>::value,	\
 					  "variable must be lvalue reference to array");		\
 		return array;								            			\
+	}
+
+/**
+ * Macro create getter for pointer to function type
+ * with pointer to function return value
+ * @param type - pointer to function type
+ * @param name - name field
+ */
+#define GETTER_PTR_TO_FUNC(type, func)									\
+	func_ptr_t<type> get_##func() {										\
+		static_assert(is_function_pointer<type(*)()>::value,			\
+                      "only pointer to function types");				\
+		static_assert(is_function_pointer<decltype(func)>::value,		\
+					  "variable must be pointer to function");	 		\
+		return func;								            		\
+	}
+
+/**
+ * Macro create getter for lvalue reference to function type
+ * with lvalue reference to function return value
+ * @param type - lvalue reference to function type
+ * @param name - name field
+ */
+#define GETTER_LVREF_TO_FUNC(type, func)									\
+	func_lvref_t<type> get_##func() {										\
+		static_assert(is_function_lvalue_reference<type(&)()>::value,		\
+                      "only lvalue reference to function types");			\
+		static_assert(is_function_lvalue_reference<decltype(func)>::value,	\
+					  "variable must be lvalue reference to function");		\
+		return func;								            			\
 	}
 
 #endif /* PROPERTY_HPP_ */
