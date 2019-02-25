@@ -52,5 +52,25 @@ struct is_array_rvalue_reference : std::false_type {};
 template<class T, std::size_t N>
 struct is_array_rvalue_reference<T (&&)[N]> : std::true_type {};
 
+/* aliases for pointer and reference to function */
+template <class Ret, class... Args>
+using func_ptr_t = Ret (*)(Args...);
+
+template <class Ret, class... Args>
+using func_lvref_t = Ret (&)(Args...);
+
+template <class Ret, class... Args>
+using func_rvref_t = Ret (&&)(Args...);
+
+/* aliases for pointer and reference to array */
+template <typename T, int N>
+using arr_ptr_t = T (*)[N];
+
+template <typename T, int N>
+using arr_lvref_t = T (&)[N];
+
+template <typename T, int N>
+using arr_rvref_t = T (&&)[N];
+
 
 #endif /* CHECK_TYPE_HPP_ */

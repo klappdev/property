@@ -2,7 +2,6 @@
 #include <string>
 
 #include "../property.hpp"
-#include "../type/check_type.hpp"
 
 using namespace std;
 
@@ -77,6 +76,22 @@ private:
 	string&& rvref;
 };
 
+
+class smart_array {
+public:
+	 smart_array() : arr_lvref(arr_val) {}
+	~smart_array() {}
+
+	SETTER_PTR_TO_ARR(int, arr_ptr, 3);
+
+	GETTER_PTR_TO_ARR(int, arr_ptr, 3);
+	GETTER_LVREF_TO_ARR(int, arr_lvref, 3);
+private:
+	int (*arr_ptr)[3];
+	int (&arr_lvref)[3];
+
+	int arr_val[3] = { 5, 10, 15};
+};
 
 static void test_person() {
 	person p;
@@ -157,6 +172,23 @@ static void test_reference() {
 	cout << "field rvref: " << reference("Asia").get_rvref() << endl;
 }
 
+static void test_smart() {
+	smart_array sa;
+
+	/* 1 */
+	int first[3] = { 1, 2, 3 };
+	sa.set_arr_ptr(&first);
+
+
+	for (int item : *sa.get_arr_ptr()) {
+		cout << "item: " << item << endl;
+	}
+
+	/* 2 */
+	for (int item : sa.get_arr_lvref()) {
+		cout << "item: " << item << endl;
+	}
+}
 
 
 int main(int argc, char **argv) {
@@ -165,6 +197,7 @@ int main(int argc, char **argv) {
 	test_person();
 	test_address();
 	test_reference();
+	test_smart();
 }
 
 

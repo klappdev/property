@@ -3,6 +3,8 @@
 
 #include <type_traits>
 
+#include "type/check_type.hpp"
+
 /**
  * Macro create setter for primitive type
  * @param type - primitive type
@@ -259,6 +261,21 @@
 		for (int i = 0; i < length; i++) {						\
 			this->array[i] = new_array[i];		              	\
 		}											            \
+	}
+
+/**
+ * Macro create setter for pointer to array type
+ * @param type - pointer to array type
+ * @param name - name field
+ * @param length - length array
+ */
+#define SETTER_PTR_TO_ARR(type, array, length)						\
+	void set_##array(type (*new_array)[length]) {					\
+		static_assert(is_array_pointer<type(*)[length]>::value,		\
+                      "only pointer to array types");				\
+		static_assert(is_array_pointer<decltype(array)>::value,		\
+					  "variable must be pointer to array");		 	\
+		this->array = new_array;					            	\
 	}
 
 /**
@@ -628,5 +645,34 @@
 	    return name; 										\
 	}
 
+/**
+ * Macro create getter for pointer to array type
+ * with pointer to array return value
+ * @param type - pointer to array type
+ * @param name - name field
+ */
+#define GETTER_PTR_TO_ARR(type, array, length)						\
+	arr_ptr_t<type, length> get_##array() {							\
+		static_assert(is_array_pointer<type(*)[length]>::value,		\
+                      "only pointer to array types");				\
+		static_assert(is_array_pointer<decltype(array)>::value,		\
+					  "variable must be pointer to array");		 	\
+		return array;								            	\
+	}
+
+/**
+ * Macro create getter for lvalue reference to array type
+ * with lvalue reference to array return value
+ * @param type - lvalue reference to array type
+ * @param name - name field
+ */
+#define GETTER_LVREF_TO_ARR(type, array, length)							\
+	arr_lvref_t<type, length> get_##array() {								\
+		static_assert(is_array_lvalue_reference<type(&)[length]>::value,	\
+                      "only lvalue reference to array types");				\
+		static_assert(is_array_lvalue_reference<decltype(array)>::value,	\
+					  "variable must be lvalue reference to array");		\
+		return array;								            			\
+	}
 
 #endif /* PROPERTY_HPP_ */
