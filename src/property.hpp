@@ -229,6 +229,20 @@
 	}
 
 /**
+ * Macro create setter for enum type
+ * @param type - enum type
+ * @param name - name field
+ */
+#define SETTER_ENUM(type, name)								\
+	void set_##name(type value)	{							\
+		static_assert(std::is_enum<type>::value, 			\
+					  "only enum types");					\
+		static_assert(std::is_enum<decltype(name)>::value,	\
+					  "variable must be enum");				\
+		this->name = value;									\
+	}
+
+/**
  * Macro create setter for pointer type
  * @param type - pointer type
  * @param name - name field
@@ -627,6 +641,20 @@
 		static_assert(std::is_rvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
 		return std::move(name); 							 			\
+	}
+
+/**
+ * Macro create getter for enum type
+ * @param type - enum type
+ * @param name - name field
+ */
+#define GETTER_ENUM(type, name) 							\
+	type get_##name() const { 								\
+		static_assert(std::is_enum<type>::value, 			\
+					  "only enum types");					\
+		static_assert(std::is_enum<decltype(name)>::value,	\
+					  "variable must be enum");				\
+		return name; 										\
 	}
 
 /**

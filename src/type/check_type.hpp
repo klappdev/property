@@ -10,7 +10,6 @@ using func_lvref_t = Ret (&)();
 
 template <typename Ret>
 using func_rvref_t = Ret (&&)();
-#endif
 
 #if 0
 template <class Ret, class... Args>

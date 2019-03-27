@@ -5,6 +5,8 @@
 
 using namespace std;
 
+enum class human { MALE, FEMALE };
+
 class person {
 public:
 	person() = default;
@@ -12,6 +14,7 @@ public:
 
    SETTER_PRIM(int, id);
    SETTER_FLAG(bool, merried);
+   SETTER_ENUM(human, type);
 
    SETTER_PTR(int, next);
    SETTER_ARR(std::string, address, 3);
@@ -22,6 +25,7 @@ public:
 
    GETTER_PRIM(int, id);
    GETTER_FLAG(bool, merried);
+   GETTER_ENUM(human, type);
 
    GETTER_OBJ_LR(std::string,  name);
    GETTER_OBJ_CLR(std::string, name);
@@ -31,6 +35,8 @@ public:
 
 private:
 	int id;
+	human type;
+
 	std::string name;
 	std::string address[5];
 
@@ -188,6 +194,15 @@ static void test_smart_array() {
 	}
 }
 
+static void test_enum() {
+	person p;
+	human type = human::FEMALE;
+
+	p.set_type(type);
+	p.get_type();
+
+}
+
 int main(int argc, char **argv) {
 	cout << "Test property library" << endl;
 
@@ -195,6 +210,7 @@ int main(int argc, char **argv) {
 	test_address();
 	test_reference();
 	test_smart_array();
+	test_enum();
 }
 
 
