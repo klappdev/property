@@ -6,6 +6,7 @@
 using namespace std;
 
 enum class human { MALE, FEMALE };
+enum class pc { INTEL, AMD };
 
 class person {
 public:
@@ -41,6 +42,32 @@ private:
 	std::string address[5];
 
 	bool merried;
+	int* next;
+};
+
+class computer {
+public:
+	constexpr computer() :
+	id(0), type(pc::INTEL),
+	modern(false), next(nullptr) {};
+
+   SETTER_PRIM_CEXS(int, id);
+   SETTER_FLAG_CEXS(bool, modern);
+//   SETTER_ENUM(pc, type);
+//
+//   SETTER_PTR(int, next);
+//
+   GETTER_PRIM_CEXS(int, id);
+   GETTER_FLAG_CEXS(bool, modern);
+//   GETTER_ENUM(pc, type);
+//
+//   GETTER_PTR(int, next);
+
+private:
+	int id;
+	pc type;
+
+	bool modern;
 	int* next;
 };
 
@@ -159,6 +186,18 @@ static void test_person() {
 	cout << endl;
 }
 
+static void test_computer() {
+	constexpr computer p;
+
+	/* 1 */
+	p.set_id(5);
+	cout << "field id: " << p.get_id() << endl;
+
+	/* 2 */
+	p.set_modern(true);
+	cout << "field modern: " << p.is_modern() << endl;
+}
+
 static void test_address() {
 	address addr;
 
@@ -246,6 +285,7 @@ int main(int argc, char **argv) {
 	cout << "Test property library" << endl;
 
 	test_person();
+	test_computer();
 	test_address();
 	test_reference();
 	test_smart_array();

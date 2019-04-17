@@ -21,6 +21,42 @@
 		this->name = value;											\
 	}
 
+#if __cpp_constexpr >= 201304L
+/**
+ * Macro create setter for primitive type with constexpr specifier
+ * @param type - primitive type
+ * @param name - name field
+ */
+#define SETTER_PRIM_CEXS(type, name)								\
+	constexpr void set_##name(type value) {							\
+		static_assert(std::is_fundamental<type>::value, 			\
+					  "only primitive types");						\
+		static_assert(std::is_fundamental<decltype(name)>::value,	\
+					  "variable must be primitive");				\
+		static_assert(std::is_same<type, decltype(name)>::value,  	\
+					  "both types must be same");			    	\
+		this->name = value;											\
+	}
+#endif
+
+#if __cpp_consteval >= 201811L
+/**
+ * Macro create setter for primitive type with consteval specifier
+ * @param type - primitive type
+ * @param name - name field
+ */
+#define SETTER_PRIM_CEVS(type, name)								\
+	consteval void set_##name(type value) noexcept	{				\
+		static_assert(std::is_fundamental<type>::value, 			\
+					  "only primitive types");						\
+		static_assert(std::is_fundamental<decltype(name)>::value,	\
+					  "variable must be primitive");				\
+		static_assert(std::is_same<type, decltype(name)>::value,  	\
+					  "both types must be same");			    	\
+		this->name = value;											\
+	}
+#endif
+
 /**
  * Macro create setter for boolean type
  * @param type - boolean type
@@ -32,6 +68,20 @@
 					  "only bool type");			    \
 		this->name = value;								\
 	}
+
+#if __cpp_constexpr >= 201304L
+/**
+ * Macro create setter for boolean type with constexpr specifier
+ * @param type - boolean type
+ * @param name - name field
+ */
+#define SETTER_FLAG_CEXS(type, name)					\
+	constexpr void set_##name(type value)	{			\
+		static_assert(std::is_same<type, bool>::value,  \
+					  "only bool type");			    \
+		this->name = value;								\
+	}
+#endif
 
 /**
  * Macro create setter for object type
@@ -365,6 +415,37 @@
 		return name; 												\
 	}
 
+#if __cpp_constexpr >= 201304L
+/**
+ * Macro create getter for primitive type with constexpr specifier
+ * @param type - primitive type
+ * @param name - name field
+ */
+#define GETTER_PRIM_CEXS(type, name) 								\
+	constexpr type get_##name() const { 							\
+		static_assert(std::is_fundamental<type>::value, 			\
+					  "only primitive types");						\
+		static_assert(std::is_fundamental<decltype(name)>::value,	\
+					  "variable must be primitive");				\
+		static_assert(std::is_same<type, decltype(name)>::value,  	\
+					  "both types must be same");			    	\
+		return name; 												\
+	}
+#endif
+
+/**
+ * Macro create getter for boolean type with constexpr specifier
+ * @param type - boolean type
+ * @param name - name field
+ */
+#define GETTER_FLAG_CEXS(type, name) 					\
+	constexpr type is_##name() const { 					\
+		static_assert(std::is_same<type, bool>::value,  \
+					  "only bool type");			    \
+		return name; 									\
+	}
+
+#if __cpp_constexpr >= 201304L
 /**
  * Macro create getter for boolean type
  * @param type - boolean type
@@ -376,6 +457,8 @@
 					  "only bool type");			    \
 		return name; 									\
 	}
+
+#endif
 
 /**
  * Macro create getter for object type
