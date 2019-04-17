@@ -16,6 +16,8 @@
 					  "only primitive types");						\
 		static_assert(std::is_fundamental<decltype(name)>::value,	\
 					  "variable must be primitive");				\
+		static_assert(std::is_same<type, decltype(name)>::value,  	\
+					  "both types must be same");			    	\
 		this->name = value;											\
 	}
 
@@ -45,6 +47,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = value;										\
 	}
 
@@ -62,6 +66,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = value;										\
 	}
 
@@ -79,6 +85,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = value;										\
 	}
 
@@ -96,6 +104,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = value;										\
 	}
 
@@ -113,6 +123,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = value;										\
 	}
 
@@ -132,6 +144,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = std::move(value);							\
 	}
 
@@ -149,6 +163,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = std::move(value);							\
 	}
 
@@ -166,6 +182,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = std::move(value);							\
 	}
 
@@ -183,6 +201,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+	    static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 		this->name = std::move(value);							\
 	}
 
@@ -197,6 +217,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+	    static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		this->name = value;									 			\
 	}
 
@@ -211,6 +235,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+	    static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		this->name = value;									 			\
 	}
 
@@ -225,6 +253,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_rvalue_reference<decltype(name)>::value,	\
 					  "variable must be rvalue reference");	 			\
+	    static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		this->name = std::move(value);	 					 			\
 	}
 
@@ -233,13 +265,15 @@
  * @param type - enum type
  * @param name - name field
  */
-#define SETTER_ENUM(type, name)								\
-	void set_##name(type value)	{							\
-		static_assert(std::is_enum<type>::value, 			\
-					  "only enum types");					\
-		static_assert(std::is_enum<decltype(name)>::value,	\
-					  "variable must be enum");				\
-		this->name = value;									\
+#define SETTER_ENUM(type, name)									\
+	void set_##name(type value)	{								\
+		static_assert(std::is_enum<type>::value, 				\
+					  "only enum types");						\
+		static_assert(std::is_enum<decltype(name)>::value,		\
+					  "variable must be enum");					\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
+		this->name = value;										\
 	}
 
 /**
@@ -247,13 +281,17 @@
  * @param type - pointer type
  * @param name - name field
  */
-#define SETTER_PTR(type, name)								 \
-	void set_##name(type* value)	{						 \
-		static_assert(std::is_pointer<type*>::value,		 \
-					  "only pointer types");				 \
-		static_assert(std::is_pointer<decltype(name)>::value,\
-					  "variable must be pointer");			 \
-		this->name = value;									 \
+#define SETTER_PTR(type, name)								 	\
+	void set_##name(type* value)	{						 	\
+		static_assert(std::is_pointer<type*>::value,		 	\
+					  "only pointer types");				 	\
+		static_assert(std::is_pointer<decltype(name)>::value,	\
+					  "variable must be pointer");			 	\
+		static_assert(std::is_same<std::remove_pointer_t< 		\
+                                  decltype(name)>,       		\
+								  type>::value,	              	\
+					  "both types must be same");	  			\
+		this->name = value;									 	\
 	}
 
 /**
@@ -264,14 +302,13 @@
  */
 #define SETTER_ARR(type, array, length)							\
 	void set_##array(type (&new_array)[length]) {				\
-		static_assert(std::is_same<std::remove_all_extents_t< 	\
-                                  decltype(array)>,       		\
-								  type>::value,	              	\
-							  "types arrays must be same");	  	\
 		static_assert(std::is_array<type[]>::value, 			\
 					  "only array types");						\
 		static_assert(std::is_array<decltype(array)>::value,	\
 					  "variable must be array");			 	\
+		static_assert(std::is_same<std::remove_all_extents_t< 	\
+                                 decltype(array)>, type>::value,\
+					  "both types must be same");	  			\
 		for (int i = 0; i < length; i++) {						\
 			this->array[i] = new_array[i];		              	\
 		}											            \
@@ -285,10 +322,13 @@
  */
 #define SETTER_PTR_TO_ARR(type, array, length)						\
 	void set_##array(type (*new_array)[length]) {					\
-		static_assert(is_array_pointer<type(*)[length]>::value,		\
+		static_assert(is_pointer_to_array<type(*)[length]>::value,	\
                       "only pointer to array types");				\
-		static_assert(is_array_pointer<decltype(array)>::value,		\
-					  "variable must be pointer to array");		 	\
+		static_assert(is_pointer_to_array<decltype(array)>::value,	\
+					  "variable must be pointer to array");			\
+		static_assert(std::is_same<remove_pointer_to_array_t< 		\
+                                  decltype(array)>, type>::value,	\
+					  "both types must be same");	  				\
 		this->array = new_array;					            	\
 	}
 
@@ -297,13 +337,16 @@
  * @param type - pointer to function type
  * @param name - name field
  */
-#define SETTER_PTR_TO_FUNC(type, func)									\
-	void set_##func(type (*new_func)()) {								\
-		static_assert(is_function_pointer<type(*)()>::value,			\
-                      "only pointer to function types");				\
-		static_assert(is_function_pointer<decltype(func)>::value,		\
-					  "variable must be pointer to function");			\
-		this->func = new_func;					            			\
+#define SETTER_PTR_TO_FUNC(type, func)								\
+	void set_##func(type (*new_func)()) {							\
+		static_assert(is_pointer_to_function<type(*)()>::value,		\
+                      "only pointer to function types");			\
+		static_assert(is_pointer_to_function<decltype(func)>::value,\
+					  "variable must be pointer to function");		\
+		static_assert(std::is_same<remove_pointer_to_function_t< 	\
+                                  decltype(func)>, type>::value,	\
+					  "both types must be same");	  				\
+		this->func = new_func;					            		\
 	}
 
 /**
@@ -317,6 +360,8 @@
 					  "only primitive types");						\
 		static_assert(std::is_fundamental<decltype(name)>::value,	\
 					  "variable must be primitive");				\
+		static_assert(std::is_same<type, decltype(name)>::value,  	\
+					  "both types must be same");			    	\
 		return name; 												\
 	}
 
@@ -346,6 +391,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -363,6 +410,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -380,6 +429,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -397,6 +448,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -414,6 +467,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -431,6 +486,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -448,6 +505,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -465,6 +524,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -482,6 +543,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return name; 											\
 	}
 
@@ -499,6 +562,8 @@
 		static_assert(std::is_class<decltype(name)>::value ||	\
 					  std::is_union<decltype(name)>::value,		\
 					  "variable must be class");				\
+		static_assert(std::is_same<type, decltype(name)>::value,\
+					  "both types must be same");			    \
 	    return std::move(name);									\
 	}
 
@@ -514,6 +579,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -529,6 +598,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -544,6 +617,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -559,6 +636,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -575,6 +656,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -591,6 +676,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -607,6 +696,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -623,6 +716,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_lvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return name; 							 			 			\
 	}
 
@@ -640,6 +737,10 @@
 					  "only reference types");				 			\
 		static_assert(std::is_rvalue_reference<decltype(name)>::value,	\
 					  "variable must be lvalue reference");	 			\
+		static_assert(std::is_same<std::remove_reference_t< 			\
+                                  decltype(name)>,       				\
+								  type>::value,	              			\
+					  "both types must be same");	  					\
 		return std::move(name); 							 			\
 	}
 
@@ -648,13 +749,15 @@
  * @param type - enum type
  * @param name - name field
  */
-#define GETTER_ENUM(type, name) 							\
-	type get_##name() const { 								\
-		static_assert(std::is_enum<type>::value, 			\
-					  "only enum types");					\
-		static_assert(std::is_enum<decltype(name)>::value,	\
-					  "variable must be enum");				\
-		return name; 										\
+#define GETTER_ENUM(type, name) 									\
+	type get_##name() const { 										\
+		static_assert(std::is_enum<type>::value, 					\
+					  "only enum types");							\
+		static_assert(std::is_enum<decltype(name)>::value,			\
+					  "variable must be enum");						\
+		static_assert(std::is_same<type, decltype(name)>::value,  	\
+					  "both types must be same");			    	\
+		return name; 												\
 	}
 
 /**
@@ -669,6 +772,10 @@
 					  "only pointer types");				 \
 		static_assert(std::is_pointer<decltype(name)>::value,\
 					  "variable must be pointer");			 \
+		static_assert(std::is_same<std::remove_pointer_t< 	 \
+                                  decltype(name)>,       	 \
+								  type>::value,	             \
+					  "both types must be same");	  		 \
 		return name; 							 			 \
 	}
 
@@ -678,13 +785,17 @@
  * @param type - array type
  * @param name - name field
  */
-#define GETTER_ARR(type, name) 								\
-	type* get_##name() { 									\
-		static_assert(std::is_array<type[]>::value,			\
-					  "only array types");					\
-		static_assert(std::is_array<decltype(name)>::value, \
-					  "variable must be array");			\
-	    return name; 										\
+#define GETTER_ARR(type, name) 									\
+	type* get_##name() { 										\
+		static_assert(std::is_array<type[]>::value,				\
+					  "only array types");						\
+		static_assert(std::is_array<decltype(name)>::value, 	\
+					  "variable must be array");				\
+		static_assert(std::is_same<std::remove_all_extents_t< 	\
+                                  decltype(name)>,       		\
+								  type>::value,	              	\
+					  "both types must be same");	  			\
+	    return name; 											\
 	}
 
 /**
@@ -695,10 +806,13 @@
  */
 #define GETTER_PTR_TO_ARR(type, array, length)						\
 	arr_ptr_t<type, length> get_##array() {							\
-		static_assert(is_array_pointer<type(*)[length]>::value,		\
+		static_assert(is_pointer_to_array<type(*)[length]>::value,	\
                       "only pointer to array types");				\
-		static_assert(is_array_pointer<decltype(array)>::value,		\
-					  "variable must be pointer to array");		 	\
+		static_assert(is_pointer_to_array<decltype(array)>::value,	\
+					  "variable must be pointer to array");			\
+		static_assert(std::is_same<remove_pointer_to_array_t< 		\
+                                  decltype(array)>, type>::value,	\
+					  "both types must be same");	  				\
 		return array;								            	\
 	}
 
@@ -710,11 +824,32 @@
  */
 #define GETTER_LVREF_TO_ARR(type, array, length)							\
 	arr_lvref_t<type, length> get_##array() {								\
-		static_assert(is_array_lvalue_reference<type(&)[length]>::value,	\
+		static_assert(is_lvalue_reference_to_array<type(&)[length]>::value,	\
                       "only lvalue reference to array types");				\
-		static_assert(is_array_lvalue_reference<decltype(array)>::value,	\
+		static_assert(is_lvalue_reference_to_array<decltype(array)>::value,	\
 					  "variable must be lvalue reference to array");		\
+		static_assert(std::is_same<remove_lvalue_reference_to_array_t<		\
+                                  decltype(array)>, type>::value,	        \
+					  "both types must be same");	  						\
 		return array;								            			\
+	}
+
+/**
+ * Macro create getter for rvalue reference to array type
+ * with rvalue reference to array return value
+ * @param type - rvalue reference to array type
+ * @param name - name field
+ */
+#define GETTER_RVREF_TO_ARR(type, array, length)								\
+	arr_rvref_t<type, length> get_##array() {									\
+		static_assert(is_rvalue_reference_to_array<type(&&)[length]>::value,	\
+                      "only lvalue reference to array types");					\
+		static_assert(is_rvalue_reference_to_array<decltype(array)>::value,		\
+					  "variable must be lvalue reference to array");			\
+		static_assert(std::is_same<remove_rvalue_reference_to_array_t<			\
+                                  decltype(array)>, type>::value,	        	\
+					  "both types must be same");	  							\
+		return std::move(array);					            				\
 	}
 
 /**
@@ -725,10 +860,13 @@
  */
 #define GETTER_PTR_TO_FUNC(type, func)									\
 	func_ptr_t<type> get_##func() {										\
-		static_assert(is_function_pointer<type(*)()>::value,			\
+		static_assert(is_pointer_to_function<type(*)()>::value,			\
                       "only pointer to function types");				\
-		static_assert(is_function_pointer<decltype(func)>::value,		\
+		static_assert(is_pointer_to_function<decltype(func)>::value,	\
 					  "variable must be pointer to function");	 		\
+		static_assert(std::is_same<remove_pointer_to_function_t< 		\
+						  decltype(func)>, type>::value,				\
+					  "both types must be same");	  					\
 		return func;								            		\
 	}
 
@@ -738,13 +876,34 @@
  * @param type - lvalue reference to function type
  * @param name - name field
  */
-#define GETTER_LVREF_TO_FUNC(type, func)									\
-	func_lvref_t<type> get_##func() {										\
-		static_assert(is_function_lvalue_reference<type(&)()>::value,		\
-                      "only lvalue reference to function types");			\
-		static_assert(is_function_lvalue_reference<decltype(func)>::value,	\
-					  "variable must be lvalue reference to function");		\
-		return func;								            			\
+#define GETTER_LVREF_TO_FUNC(type, func)										\
+	func_lvref_t<type> get_##func() {											\
+		static_assert(is_lvalue_reference_to_function<type(&)()>::value,		\
+                      "only lvalue reference to function types");				\
+		static_assert(is_lvalue_reference_to_function<decltype(func)>::value,	\
+					  "variable must be lvalue reference to function");			\
+		static_assert(std::is_same<remove_lvalue_reference_to_function_t< 		\
+				  	  	  	  	  decltype(func)>, type>::value,				\
+					  "both types must be same");	  							\
+		return func;								            				\
+	}
+
+/**
+ * Macro create getter for rvalue reference to function type
+ * with rvalue reference to function return value
+ * @param type - rvalue reference to function type
+ * @param name - name field
+ */
+#define GETTER_RVREF_TO_FUNC(type, func)										\
+	func_rvref_t<type> get_##func() {											\
+		static_assert(is_rvalue_reference_to_function<type(&&)()>::value,		\
+                      "only rvalue reference to function types");				\
+		static_assert(is_rvalue_reference_to_function<decltype(func)>::value,	\
+					  "variable must be rvalue reference to function");			\
+		static_assert(std::is_same<remove_rvalue_reference_to_function_t< 		\
+				  	  	  	  	  decltype(func)>, type>::value,				\
+					  "both types must be same");	  							\
+		return std::move(func);						            				\
 	}
 
 #endif /* PROPERTY_HPP_ */

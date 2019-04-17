@@ -85,18 +85,38 @@ private:
 
 class smart_array {
 public:
-	 smart_array() : arr_lvref(arr_val) {}
+	 smart_array() : arr_ptr(&arr_val), arr_lvref(arr_val), arr_rvref(std::move(arr_val)) {}
 	~smart_array() {}
 
 	SETTER_PTR_TO_ARR(int, arr_ptr, 3);
 
 	GETTER_PTR_TO_ARR(int, arr_ptr, 3);
 	GETTER_LVREF_TO_ARR(int, arr_lvref, 3);
+	GETTER_RVREF_TO_ARR(int, arr_rvref, 3);
 private:
 	int (*arr_ptr)[3];
 	int (&arr_lvref)[3];
+	int (&&arr_rvref)[3];
 
 	int arr_val[3] = { 5, 10, 15};
+};
+
+int smart_func() { return 0xCAFEBABE; };
+
+class smart_function {
+public:
+	smart_function() : func_ptr(&smart_func), func_lvref(smart_func), func_rvref(std::move(smart_func)) {}
+	~smart_function() {}
+
+	SETTER_PTR_TO_FUNC(int, func_ptr);
+
+	GETTER_PTR_TO_FUNC(int, func_ptr);
+	GETTER_LVREF_TO_FUNC(int, func_lvref);
+	GETTER_RVREF_TO_FUNC(int, func_rvref);
+private:
+	int (*func_ptr)();
+	int (&func_lvref)();
+	int (&&func_rvref)();
 };
 
 static void test_person() {
@@ -192,6 +212,25 @@ static void test_smart_array() {
 	for (int item : sa.get_arr_lvref()) {
 		cout << "item arr_lvref: " << item << endl;
 	}
+
+	/* 3 */
+	for (int item : sa.get_arr_rvref()) {
+		cout << "item arr_rvref: " << item << endl;
+	}
+}
+
+static void test_smart_function() {
+	smart_function sf;
+
+	/* 1 */
+	sf.set_func_ptr(&smart_func);
+	cout << "ret func_ptr: " << std::hex << sf.get_func_ptr()() << endl;
+
+	/* 2 */
+	cout << "ret func_lvref: " << std::hex << sf.get_func_lvref()() << endl;
+
+	/* 3 */
+	cout << "ret func_rvref: " << std::hex << sf.get_func_rvref()() << endl;
 }
 
 static void test_enum() {
@@ -210,6 +249,7 @@ int main(int argc, char **argv) {
 	test_address();
 	test_reference();
 	test_smart_array();
+	test_smart_function();
 	test_enum();
 }
 

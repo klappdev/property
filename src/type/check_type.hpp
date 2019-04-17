@@ -32,55 +32,118 @@ using arr_lvref_t = T (&)[N];
 template <typename T, int N>
 using arr_rvref_t = T (&&)[N];
 
-/* check if type is pointer to function */
+/* pointer to function */
 template<class>
-struct is_function_pointer : std::false_type { };
+struct is_pointer_to_function : std::false_type { };
 
 template<class Ret, class... Args>
-struct is_function_pointer<Ret(*)(Args...)> : std::true_type {};
+struct is_pointer_to_function<Ret(*)(Args...)> : std::true_type {};
 
 template<class Ret, class... Args>
-struct is_function_pointer<Ret(*)(Args...,...)> : std::true_type {};
+struct is_pointer_to_function<Ret(*)(Args...,...)> : std::true_type {};
 
-/* check if type is lvalue reference to function */
+template<class Ret>
+struct remove_pointer_to_function { using type = Ret; };
+
+template<class Ret, class... Args>
+struct remove_pointer_to_function<Ret(*)(Args...)> { using type = Ret; };
+
+template<class Ret, class... Args>
+struct remove_pointer_to_function<Ret(*)(Args...,...)> { using type = Ret; };
+
+template<class Ret>
+using remove_pointer_to_function_t = typename remove_pointer_to_function<Ret>::type;
+
+/* lvalue reference to function */
 template<class>
-struct is_function_lvalue_reference : std::false_type { };
+struct is_lvalue_reference_to_function : std::false_type { };
 
 template<class Ret, class... Args>
-struct is_function_lvalue_reference<Ret(&)(Args...)> : std::true_type {};
+struct is_lvalue_reference_to_function<Ret(&)(Args...)> : std::true_type {};
 
 template<class Ret, class... Args>
-struct is_function_lvalue_reference<Ret(&)(Args...,...)> : std::true_type {};
+struct is_lvalue_reference_to_function<Ret(&)(Args...,...)> : std::true_type {};
 
-/* check if type is rvalue reference to function */
+template<class Ret>
+struct remove_lvalue_reference_to_function { using type = Ret; };
+
+template<class Ret, class... Args>
+struct remove_lvalue_reference_to_function<Ret(&)(Args...)> { using type = Ret; };
+
+template<class Ret, class... Args>
+struct remove_lvalue_reference_to_function<Ret(&)(Args...,...)> { using type = Ret; };
+
+template<class Ret>
+using remove_lvalue_reference_to_function_t = typename remove_lvalue_reference_to_function<Ret>::type;
+
+/* rvalue reference to function */
 template<class>
-struct is_function_rvalue_reference : std::false_type { };
+struct is_rvalue_reference_to_function : std::false_type { };
 
 template<class Ret, class... Args>
-struct is_function_rvalue_reference<Ret(&&)(Args...)> : std::true_type {};
+struct is_rvalue_reference_to_function<Ret(&&)(Args...)> : std::true_type {};
 
 template<class Ret, class... Args>
-struct is_function_rvalue_reference<Ret(&&)(Args...,...)> : std::true_type {};
+struct is_rvalue_reference_to_function<Ret(&&)(Args...,...)> : std::true_type {};
 
-/* check if type is pointer to array */
+template<class Ret>
+struct remove_rvalue_reference_to_function { using type = Ret; };
+
+template<class Ret, class... Args>
+struct remove_rvalue_reference_to_function<Ret(&&)(Args...)> { using type = Ret; };
+
+template<class Ret, class... Args>
+struct remove_rvalue_reference_to_function<Ret(&&)(Args...,...)> { using type = Ret; };
+
+template<class Ret>
+using remove_rvalue_reference_to_function_t = typename remove_rvalue_reference_to_function<Ret>::type;
+
+/* pointer to array */
 template<class T>
-struct is_array_pointer : std::false_type {};
+struct is_pointer_to_array : std::false_type {};
 
 template<class T, std::size_t N>
-struct is_array_pointer<T (*)[N]> : std::true_type {};
+struct is_pointer_to_array<T (*)[N]> : std::true_type {};
 
-/* check if type is lvalue reference to array */
 template<class T>
-struct is_array_lvalue_reference : std::false_type {};
+struct remove_pointer_to_array { using type = T; };
 
 template<class T, std::size_t N>
-struct is_array_lvalue_reference<T (&)[N]> : std::true_type {};
+struct remove_pointer_to_array<T (*)[N]> { using type = T; };
 
-/* check if type is rvalue reference to array */
 template<class T>
-struct is_array_rvalue_reference : std::false_type {};
+using remove_pointer_to_array_t = typename remove_pointer_to_array<T>::type;
+
+/* lvalue reference to array */
+template<class T>
+struct is_lvalue_reference_to_array : std::false_type {};
 
 template<class T, std::size_t N>
-struct is_array_rvalue_reference<T (&&)[N]> : std::true_type {};
+struct is_lvalue_reference_to_array<T (&)[N]> : std::true_type {};
+
+template<class T>
+struct remove_lvalue_reference_to_array { using type = T; };
+
+template<class T, std::size_t N>
+struct remove_lvalue_reference_to_array<T (&)[N]> { using type = T; };
+
+template<class T>
+using remove_lvalue_reference_to_array_t = typename remove_lvalue_reference_to_array<T>::type;
+
+/* rvalue reference to array */
+template<class T>
+struct is_rvalue_reference_to_array : std::false_type {};
+
+template<class T, std::size_t N>
+struct is_rvalue_reference_to_array<T (&&)[N]> : std::true_type {};
+
+template<class T>
+struct remove_rvalue_reference_to_array { using type = T; };
+
+template<class T, std::size_t N>
+struct remove_rvalue_reference_to_array<T (&&)[N]> { using type = T; };
+
+template<class T>
+using remove_rvalue_reference_to_array_t = typename remove_rvalue_reference_to_array<T>::type;
 
 #endif /* CHECK_TYPE_HPP_ */
