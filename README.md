@@ -26,7 +26,7 @@ Developer can write less code and to be sure that code write correct.
 
 class person {
 public:
-	person() = default;
+   person() = default;
    ~person() = default;
 
    SETTER_PRIM(int, id);
@@ -51,20 +51,16 @@ public:
    GETTER_ARR(std::string, address);
 
 private:
-	int id;
-	human type;
+   int id;
+   human type;
 
-	std::string name;
-	std::string address[5];
+   std::string name;
+   std::string address[5];
 
-	bool merried;
-	int* next;
+   bool merried;
+   int* next;
 };
 ```
 
-In future expects add setters and getters with specifiers </br>
-constexpr and consteval  <br/>
-
 Requirements:<br/>
 Standard: C++14 <br/>
-library:  type_traits
